@@ -7,6 +7,7 @@ package com.SE;
 import java.awt.Image;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 /**
  *
@@ -21,15 +22,19 @@ public class main extends javax.swing.JFrame {
         initComponents();
         this.setExtendedState(MAXIMIZED_BOTH);
         this.setLocationRelativeTo(null);
-        
+
         //Poniendo las imagenes en los jLabel por codigo
         ImageIcon logoTECNM = new ImageIcon("src/com/images/tecnm.png");
-        Icon TECNM = new ImageIcon(logoTECNM.getImage().getScaledInstance(jLabel1.getWidth(), jLabel1.getHeight(), Image.SCALE_DEFAULT)); 
+        Icon TECNM = new ImageIcon(logoTECNM.getImage().getScaledInstance(jLabel1.getWidth(), jLabel1.getHeight(), Image.SCALE_DEFAULT));
         jLabel1.setIcon(TECNM);
-        
+
         ImageIcon logoIBM = new ImageIcon("src/com/images/ibm.png");
         Icon IBM = new ImageIcon(logoIBM.getImage().getScaledInstance(jLabel2.getWidth(), jLabel2.getHeight(), Image.SCALE_DEFAULT));
         jLabel2.setIcon(IBM);
+
+        establecerIconoEnBoton(jButton2, "src/com/images/salir.png", 40, 40);
+        establecerIconoEnBoton(jButton1, "src/com/images/acerca.png", 40, 40);
+        establecerIconoEnBoton(jButton3, "src/com/images/ingresar.png", 40, 40);
     }
 
     /**
@@ -158,7 +163,7 @@ public class main extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3)
                     .addComponent(jButton2))
-                .addContainerGap(157, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addGap(120, 120, 120)
@@ -189,7 +194,7 @@ public class main extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
-        acerca j1 = new acerca ();
+        acerca j1 = new acerca();
         j1.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton1MouseClicked
@@ -227,6 +232,13 @@ public class main extends javax.swing.JFrame {
                 new main().setVisible(true);
             }
         });
+    }
+
+    public void establecerIconoEnBoton(JButton boton, String rutaIcono, int ancho, int alto) {
+        ImageIcon icono = new ImageIcon(rutaIcono);
+        Image imagen = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH); // Puedes cambiar SCALE_SMOOTH a otro método de escala si lo prefieres
+        ImageIcon iconoEscalado = new ImageIcon(imagen);
+        boton.setIcon(iconoEscalado);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

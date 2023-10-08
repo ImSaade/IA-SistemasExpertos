@@ -6,6 +6,7 @@ package com.SE;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 /**
  *
@@ -29,6 +30,8 @@ public class autores extends javax.swing.JFrame {
         ImageIcon fotoPerfil2 = new ImageIcon("src/com/images/perfil2.jpeg");
         ImageIcon PERFIL2 = new ImageIcon(fotoPerfil2.getImage().getScaledInstance(jLabel2.getWidth(), jLabel2.getHeight(), Image.SCALE_DEFAULT));
         jLabel2.setIcon(PERFIL2);
+        
+        establecerIconoEnBoton(jButton1, "src/com/images/salir.png", 40, 40);
     }
 
     /**
@@ -240,6 +243,13 @@ public class autores extends javax.swing.JFrame {
                 new autores().setVisible(true);
             }
         });
+    }
+    
+    public void establecerIconoEnBoton(JButton boton, String rutaIcono, int ancho, int alto) {
+        ImageIcon icono = new ImageIcon(rutaIcono);
+        Image imagen = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH); // Puedes cambiar SCALE_SMOOTH a otro método de escala si lo prefieres
+        ImageIcon iconoEscalado = new ImageIcon(imagen);
+        boton.setIcon(iconoEscalado);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

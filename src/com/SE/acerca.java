@@ -6,6 +6,7 @@ package com.SE;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 /**
  *
@@ -29,6 +30,11 @@ public class acerca extends javax.swing.JFrame {
         String mensaje = "Este sistema es de uso exclusivo para \nLos alumnos de la materia de Inteligencia\nArtificial del Instituto Tecnológico\nDe Zacatepec";
         jTextArea1.setText(mensaje);
         jTextArea1.setEditable(false);
+        
+        establecerIconoEnBoton(jButton2, "src/com/images/autores.png", 40, 40);
+        establecerIconoEnBoton(jButton1, "src/com/images/salir.png", 40, 40);
+
+
     }
 
     /**
@@ -92,7 +98,6 @@ public class acerca extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Roboto", 1, 58)); // NOI18N
         jButton1.setText("REGRESAR");
-        jButton1.setActionCommand("REGRESAR");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
@@ -119,10 +124,10 @@ public class acerca extends javax.swing.JFrame {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 692, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 286, Short.MAX_VALUE)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 263, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -208,6 +213,13 @@ public class acerca extends javax.swing.JFrame {
                 new acerca().setVisible(true);
             }
         });
+    }
+    
+     public void establecerIconoEnBoton(JButton boton, String rutaIcono, int ancho, int alto) {
+        ImageIcon icono = new ImageIcon(rutaIcono);
+        Image imagen = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH); // Puedes cambiar SCALE_SMOOTH a otro método de escala si lo prefieres
+        ImageIcon iconoEscalado = new ImageIcon(imagen);
+        boton.setIcon(iconoEscalado);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
