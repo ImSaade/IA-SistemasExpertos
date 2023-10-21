@@ -492,7 +492,7 @@ public class peces extends javax.swing.JFrame {
             Connection connection = conexionDB.obtenerConexion();
 
             // Preparar una consulta SQL para seleccionar el último registro
-            String sql = "SELECT nombre_objeto, descripcion, imagen FROM objeto ORDER BY nombre_objeto DESC LIMIT 1";
+            String sql = "SELECT nombre_objeto, descripcion, imagen FROM objeto ORDER BY id_objeto DESC LIMIT 1";
             PreparedStatement statement = connection.prepareStatement(sql);
 
             // Ejecutar la consulta
@@ -508,6 +508,16 @@ public class peces extends javax.swing.JFrame {
                 // Mostrar los datos en los componentes de la interfaz
                 jTextField1.setText(nombre);
                 jTextArea1.setText(descripcion);
+
+                // Convertir el arreglo de bytes de la imagen a un ImageIcon
+                ImageIcon imagenIcon = new ImageIcon(imagenBytes);
+
+                // Escalar la imagen para que se ajuste al tamaño del jLabel4
+                Image imagen = imagenIcon.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_SMOOTH);
+
+                // Crear un nuevo ImageIcon con la imagen escalada y mostrarlo en jLabel4
+                ImageIcon imagenEscalada = new ImageIcon(imagen);
+                jLabel4.setIcon(imagenEscalada);
             } else {
                 JOptionPane.showMessageDialog(this, "No hay registros en la base de datos.");
             }
@@ -517,7 +527,6 @@ public class peces extends javax.swing.JFrame {
             // Cerrar la conexión
             conexionDB.cerrarConexion();
         }
-
     }//GEN-LAST:event_jButton4MouseClicked
 
     private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
