@@ -17,6 +17,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.imageio.ImageIO;
+import javax.lang.model.util.Types;
 import javax.swing.JFileChooser;
 
 
@@ -176,9 +177,19 @@ public class peces extends javax.swing.JFrame {
 
         jButton7.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
         jButton7.setText("CANCELAR");
+        jButton7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton7MouseClicked(evt);
+            }
+        });
 
         jButton8.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
         jButton8.setText("MODIFICAR");
+        jButton8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton8MouseClicked(evt);
+            }
+        });
 
         jButton9.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
         jButton9.setText("BORRAR");
@@ -403,6 +414,16 @@ public class peces extends javax.swing.JFrame {
 
                     // Decrementar el registro actual
                     registroActual--;
+
+                    // Convertir el arreglo de bytes de la imagen a un ImageIcon
+                    ImageIcon imagenIcon = new ImageIcon(imagenBytes);
+
+                    // Escalar la imagen para que se ajuste al tamaño del jLabel4
+                    Image imagen = imagenIcon.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_SMOOTH);
+
+                    // Crear un nuevo ImageIcon con la imagen escalada y mostrarlo en jLabel4
+                    ImageIcon imagenEscalada = new ImageIcon(imagen);
+                    jLabel4.setIcon(imagenEscalada);
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "No hay registros anteriores.");
@@ -442,6 +463,16 @@ public class peces extends javax.swing.JFrame {
 
                 // Incrementar el registro actual
                 registroActual++;
+
+                // Convertir el arreglo de bytes de la imagen a un ImageIcon
+                ImageIcon imagenIcon = new ImageIcon(imagenBytes);
+
+                // Escalar la imagen para que se ajuste al tamaño del jLabel4
+                Image imagen = imagenIcon.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_SMOOTH);
+
+                // Crear un nuevo ImageIcon con la imagen escalada y mostrarlo en jLabel4
+                ImageIcon imagenEscalada = new ImageIcon(imagen);
+                jLabel4.setIcon(imagenEscalada);
             } else {
                 JOptionPane.showMessageDialog(this, "No hay más registros.");
             }
@@ -451,7 +482,6 @@ public class peces extends javax.swing.JFrame {
             // Cerrar la conexión
             conexionDB.cerrarConexion();
         }
-
     }//GEN-LAST:event_jButton3MouseClicked
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
@@ -461,8 +491,8 @@ public class peces extends javax.swing.JFrame {
             // Obtener la conexión a la base de datos
             Connection connection = conexionDB.obtenerConexion();
 
-            // Preparar una consulta SQL para seleccionar el siguiente registro
-            String sql = "SELECT nombre_objeto, descripcion, imagen FROM objeto LIMIT 1 OFFSET " + registroActual;
+            // Preparar una consulta SQL para seleccionar el último registro
+            String sql = "SELECT nombre_objeto, descripcion, imagen FROM objeto ORDER BY nombre_objeto DESC LIMIT 1";
             PreparedStatement statement = connection.prepareStatement(sql);
 
             // Ejecutar la consulta
@@ -478,11 +508,8 @@ public class peces extends javax.swing.JFrame {
                 // Mostrar los datos en los componentes de la interfaz
                 jTextField1.setText(nombre);
                 jTextArea1.setText(descripcion);
-
-                // Incrementar el registro actual
-                registroActual++;
             } else {
-                JOptionPane.showMessageDialog(this, "No hay más registros.");
+                JOptionPane.showMessageDialog(this, "No hay registros en la base de datos.");
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -490,6 +517,7 @@ public class peces extends javax.swing.JFrame {
             // Cerrar la conexión
             conexionDB.cerrarConexion();
         }
+
     }//GEN-LAST:event_jButton4MouseClicked
 
     private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
@@ -518,7 +546,85 @@ public class peces extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton12MouseClicked
 
     private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
+        // TODO add your handling code here:                                
+         ConexionDB conexionDB = new ConexionDB();
+        try {
+            // Obtener la conexión a la base de datos
+            Connection connection = conexionDB.obtenerConexion();
+
+            // Obtener el nombre y descripción ingresados por el usuario
+            String nombre = jTextField1.getText();
+            String descripcion = jTextArea1.getText();
+
+            // Verificar que se haya ingresado un nombre y una descripción
+            if (nombre.isEmpty() || descripcion.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, ingrese un nombre y una descripción.");
+                return; // Salir si falta información
+            }
+
+            // Obtener la imagen actualmente mostrada en el jLabel4
+            ImageIcon icon = (ImageIcon) jLabel4.getIcon();
+            Image imagen = icon.getImage();
+
+            // Convertir la imagen a un objeto BufferedImage
+            BufferedImage bufferedImage = new BufferedImage(imagen.getWidth(null), imagen.getHeight(null), BufferedImage.TYPE_INT_RGB);
+            Graphics2D g = bufferedImage.createGraphics();
+            g.drawImage(imagen, 0, 0, null);
+            g.dispose();
+
+            // Convertir el BufferedImage a un arreglo de bytes (en formato JPEG en este ejemplo)
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "jpg", baos);
+            byte[] imagenBytes = baos.toByteArray();
+
+            // Preparar una consulta SQL para insertar los datos en la base de datos
+            String sql = "INSERT INTO objeto (nombre_objeto, descripcion, imagen) VALUES (?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            // Establecer los parámetros en la consulta
+            statement.setString(1, nombre);
+            statement.setString(2, descripcion);
+            statement.setBytes(3, imagenBytes);
+
+            // Ejecutar la consulta para insertar el nuevo registro
+            int filasAfectadas = statement.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(this, "Registro insertado con éxito.");
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al insertar el registro.");
+            }
+
+            // Cerrar la conexión a la base de datos
+            conexionDB.cerrarConexion();
+
+        } catch (Exception e) {
+            System.out.println("Error al guardar en la base de datos: " + e.getMessage());
+        }
+
+    }//GEN-LAST:event_jButton6MouseClicked
+
+    private void jButton7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseClicked
         // TODO add your handling code here:
+        ImageIcon logoAcuario = new ImageIcon ("src/com/images/acuario.png");
+        ImageIcon acuario = new ImageIcon (logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
+        jLabel4.setIcon(acuario);
+        
+        jTextField1.setText("");
+        jTextArea1.setText("");
+        jButton12.setEnabled(false);
+        jButton6.setEnabled(false);
+        jButton7.setEnabled(false);
+    }//GEN-LAST:event_jButton7MouseClicked
+
+    private void jButton8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8MouseClicked
+        // TODO add your handling code here:
+        jTextField1.setEditable(true);
+        jTextArea1.setEditable(true);
+        jButton6.setEnabled(true);
+        jButton7.setEnabled(true);
+        jButton12.setEnabled(true);
+        
         ConexionDB conexionDB = new ConexionDB();
 
         try {
@@ -550,8 +656,8 @@ public class peces extends javax.swing.JFrame {
             ImageIO.write(bufferedImage, "jpeg", baos);
             byte[] imagenBytes = baos.toByteArray();
 
-            // Preparar una consulta SQL para insertar los datos en la base de datos
-            String sql = "INSERT INTO objeto (nombre_objeto, descripcion, imagen) VALUES (?, ?, ?)";
+            // Preparar una consulta SQL para actualizar los datos en la base de datos
+            String sql = "UPDATE objeto SET nombre_objeto = ?, descripcion = ?, imagen = ? WHERE id_objeto = ?"; // Asume que existe un campo ID para identificar el registro a actualizar
             PreparedStatement statement = connection.prepareStatement(sql);
 
             // Establecer los parámetros en la consulta
@@ -559,22 +665,25 @@ public class peces extends javax.swing.JFrame {
             statement.setString(2, descripcion);
             statement.setBytes(3, imagenBytes);
 
-            // Ejecutar la consulta para insertar el nuevo registro
+            // Ejecutar la consulta para actualizar el registro
             int filasAfectadas = statement.executeUpdate();
 
             if (filasAfectadas > 0) {
-                JOptionPane.showMessageDialog(this, "Registro insertado con éxito.");
+                jButton12.setEnabled(false);
+                jButton6.setEnabled(false);
+                jButton7.setEnabled(false);
+                JOptionPane.showMessageDialog(this, "Registro actualizado con éxito.");
             } else {
-                JOptionPane.showMessageDialog(this, "Error al insertar el registro.");
+                JOptionPane.showMessageDialog(this, "Error al actualizar el registro.");
             }
 
             // Cerrar la conexión a la base de datos
             conexionDB.cerrarConexion();
 
         } catch (Exception e) {
-            System.out.println("Error al guardar en la base de datos: " + e.getMessage());
+            System.out.println("Error al actualizar en la base de datos: " + e.getMessage());
         }
-    }//GEN-LAST:event_jButton6MouseClicked
+    }//GEN-LAST:event_jButton8MouseClicked
 
     /**
      * @param args the command line arguments
