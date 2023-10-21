@@ -22,11 +22,7 @@ public class experto extends javax.swing.JFrame {
         initComponents();
         this.setExtendedState(MAXIMIZED_BOTH);
         this.setLocationRelativeTo(null);
-        
-        establecerIconoEnBoton(jButton1, "src/com/images/caracteristica.png", 40, 40);
-        establecerIconoEnBoton(jButton4, "src/com/images/pez.png", 40, 40);
-        establecerIconoEnBoton(jButton2, "src/com/images/cuadro.png", 40, 40);
-        establecerIconoEnBoton(jButton3, "src/com/images/salir.png", 40, 40);
+     
     }
 
     /**
@@ -77,6 +73,7 @@ public class experto extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(102, 102, 102));
 
         jButton3.setFont(new java.awt.Font("Roboto", 1, 50)); // NOI18N
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/images/cerrar.png"))); // NOI18N
         jButton3.setText("Salir");
         jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -90,12 +87,15 @@ public class experto extends javax.swing.JFrame {
         });
 
         jButton1.setFont(new java.awt.Font("Roboto", 1, 50)); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/images/caracteristica.png"))); // NOI18N
         jButton1.setText("AGREGAR CARACTERISTICAS");
 
         jButton2.setFont(new java.awt.Font("Roboto", 1, 50)); // NOI18N
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/images/cuadro.png"))); // NOI18N
         jButton2.setText("CUADRO MORFOLOGICO");
 
         jButton4.setFont(new java.awt.Font("Roboto", 1, 50)); // NOI18N
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/images/pez.png"))); // NOI18N
         jButton4.setText("AGREGAR PECES");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -104,12 +104,13 @@ public class experto extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(190, 190, 190)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(1129, 1129, 1129))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(945, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,7 +123,7 @@ public class experto extends javax.swing.JFrame {
                 .addComponent(jButton2)
                 .addGap(71, 71, 71)
                 .addComponent(jButton3)
-                .addContainerGap(195, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 270, 1920, 810));
@@ -143,9 +144,7 @@ public class experto extends javax.swing.JFrame {
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
         // TODO add your handling code here:
-        menu j2 = new menu();
         this.setVisible(false);
-        j2.setVisible(true);
     }//GEN-LAST:event_jButton3MouseClicked
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -187,12 +186,6 @@ public class experto extends javax.swing.JFrame {
         });
     }
     
-    public void establecerIconoEnBoton(JButton boton, String rutaIcono, int ancho, int alto) {
-        ImageIcon icono = new ImageIcon(rutaIcono);
-        Image imagen = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH); // Puedes cambiar SCALE_SMOOTH a otro método de escala si lo prefieres
-        ImageIcon iconoEscalado = new ImageIcon(imagen);
-        boton.setIcon(iconoEscalado);
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
