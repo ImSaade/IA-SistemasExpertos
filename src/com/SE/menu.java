@@ -185,6 +185,7 @@ public class menu extends javax.swing.JFrame {
         contraseña j2 = new contraseña();
         j2.setLocationRelativeTo(null);
         j2.setVisible(true);
+        
     }//GEN-LAST:event_jButton4MouseClicked
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed

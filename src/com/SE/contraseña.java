@@ -142,16 +142,19 @@ public class contraseña extends javax.swing.JFrame {
         // TODO add your handling code here:
         char[] password = jPasswordField1.getPassword();
         String passwordText = new String(password);
-        
-        if (passwordText.equals("contraseña")) {
-        // Si la contraseña es correcta, abre la otra interfaz
-        experto j1 = new experto(); // Reemplaza "OtraInterfaz" con el nombre de tu otra interfaz
-        j1.setVisible(true);
-        this.setVisible(false);
-    } else {
-        // La contraseña es incorrecta, puedes mostrar un mensaje de error o realizar alguna otra acción.
-        JOptionPane.showMessageDialog(this, "Contraseña incorrecta");
-    }
+
+        if (passwordText.equals("123")) {
+            // Si la contraseña es correcta, abre la ventana "experto"
+            experto j1 = new experto();
+            j1.setVisible(true);
+
+            // Cierra la ventana actual de contraseña
+            this.dispose();
+            
+        } else {
+            // La contraseña es incorrecta, puedes mostrar un mensaje de error u otra acción.
+            JOptionPane.showMessageDialog(this, "Contraseña incorrecta");
+        }
     }//GEN-LAST:event_jButton1MouseClicked
 
     /**
