@@ -15,8 +15,11 @@ public class contraseña extends javax.swing.JFrame {
     /**
      * Creates new form contraseña
      */
-    public contraseña() {
+    menu parentMenu;
+    
+    public contraseña(menu parent) {
         initComponents();
+        parentMenu = parent;
     }
 
     /**
@@ -145,6 +148,9 @@ public class contraseña extends javax.swing.JFrame {
 
         if (passwordText.equals("123")) {
             // Si la contraseña es correcta, abre la ventana "experto"
+            parentMenu.dispose(); // Cierra la ventana de 'menu'
+            this.dispose(); // Cierra la ventana de 'contraseñ
+        
             experto j1 = new experto();
             j1.setVisible(true);
 
@@ -187,7 +193,7 @@ public class contraseña extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new contraseña().setVisible(true);
+                //new contraseña().setVisible(true);
             }
         });
     }

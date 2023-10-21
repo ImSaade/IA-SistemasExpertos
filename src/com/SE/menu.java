@@ -182,10 +182,9 @@ public class menu extends javax.swing.JFrame {
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
         // TODO add your handling code here:
-        contraseña j2 = new contraseña();
+        contraseña j2 = new contraseña(this); // Pasa la instancia de 'menu' a la ventana de 'contraseña'
         j2.setLocationRelativeTo(null);
         j2.setVisible(true);
-        
     }//GEN-LAST:event_jButton4MouseClicked
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
