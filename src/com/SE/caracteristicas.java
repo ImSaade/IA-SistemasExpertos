@@ -31,6 +31,7 @@ public class caracteristicas extends javax.swing.JFrame {
      * Creates new form Caracteristicas
      */
     private int idActual = 1;
+    private int ca = 0;
 
     public caracteristicas() {
         initComponents();
@@ -56,6 +57,9 @@ public class caracteristicas extends javax.swing.JFrame {
         jTextField1.setEditable(false);
         jButton6.setEnabled(false);
         jButton7.setEnabled(false);
+        jLabel2.setVisible(false);
+        jTextField2.setVisible(false);
+        jTextField2.setEditable(false);
     }
 
     /**
@@ -85,6 +89,8 @@ public class caracteristicas extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -208,6 +214,11 @@ public class caracteristicas extends javax.swing.JFrame {
 
         jTextField1.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
 
+        jLabel2.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
+        jLabel2.setText("Nueva");
+
+        jTextField2.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -244,22 +255,31 @@ public class caracteristicas extends javax.swing.JFrame {
                                 .addGap(152, 152, 152))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(54, 54, 54)
-                        .addComponent(jLabel1)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField1)
-                        .addGap(65, 65, 65)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField2)
+                            .addComponent(jTextField1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(275, 275, 275)))
-                .addContainerGap(124, Short.MAX_VALUE))
+                .addGap(124, 124, 124))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -440,7 +460,7 @@ public class caracteristicas extends javax.swing.JFrame {
                 // Mostrar los datos en los componentes de la interfaz
                 jTextField1.setText(carac);
 
-                idActual = obtenerCantidadRegistros();
+                idActual = obtenerCantidadRegistros() + 40;
             } else {
                 JOptionPane.showMessageDialog(this, "No hay registros en la base de datos.");
             }
@@ -516,10 +536,13 @@ public class caracteristicas extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton9MouseClicked
 
     private void jButton8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8MouseClicked
-        jTextField1.setText("");
-        jTextField1.setEditable(true);
+        jTextField1.setEditable(false);
         jButton6.setEnabled(true);
         jButton7.setEnabled(true);
+        jTextField2.setVisible(true);
+        jTextField2.setEditable(true);
+        jLabel2.setVisible(true);
+        ca = 2;
     }//GEN-LAST:event_jButton8MouseClicked
 
     private void jButton7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseClicked
@@ -530,7 +553,7 @@ public class caracteristicas extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7MouseClicked
 
     private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
-        ConexionDB conexionDB = new ConexionDB();
+        /*ConexionDB conexionDB = new ConexionDB();
         Connection connection = conexionDB.obtenerConexion();
         PreparedStatement preparedStatement = null;
 
@@ -575,7 +598,63 @@ public class caracteristicas extends javax.swing.JFrame {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+        }*/
+        ConexionDB conexionDB = new ConexionDB();
+        Connection connection = conexionDB.obtenerConexion();
+        PreparedStatement insertPreparedStatement = null;
+        PreparedStatement updatePreparedStatement = null;
+
+        try {
+            String nuevaCaracteristica = jTextField1.getText();
+            String caracteristicaActualiza = jTextField2.getText();
+
+            if (nuevaCaracteristica.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Ingrese una característica antes de insertarla.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            } else {
+                String insertSQL = "INSERT INTO caracteristicas (caracteristica) VALUES (?)";
+                String updateSQL = "UPDATE caracteristicas SET caracteristica = ? WHERE caracteristica = ?";
+
+                insertPreparedStatement = connection.prepareStatement(insertSQL);
+                updatePreparedStatement = connection.prepareStatement(updateSQL);
+
+                if (ca == 1) {
+                    // Operación de inserción
+                    insertPreparedStatement.setString(1, nuevaCaracteristica);
+                    insertPreparedStatement.executeUpdate();
+                    JOptionPane.showMessageDialog(this, "Característica insertada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                } else if (ca == 2) {
+                    // Operación de modificación
+                    updatePreparedStatement.setString(1, (ca == 2) ? caracteristicaActualiza : nuevaCaracteristica);
+                    updatePreparedStatement.setString(2, jTextField1.getText()); // Condición para identificar el registro a actualizar basado en jTextField1
+                    updatePreparedStatement.executeUpdate();
+                    JOptionPane.showMessageDialog(this, "Característica modificada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Valor de 'ca' no válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+                jTextField1.setEditable(false);
+                jButton6.setEnabled(false);
+                jButton7.setEnabled(false);
+                jTextField1.setText("");
+                jLabel2.setVisible(false);
+                jTextField2.setVisible(false);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (insertPreparedStatement != null) {
+                    insertPreparedStatement.close();
+                }
+                if (updatePreparedStatement != null) {
+                    updatePreparedStatement.close();
+                }
+                conexionDB.cerrarConexion();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
+
     }//GEN-LAST:event_jButton6MouseClicked
 
     private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
@@ -583,6 +662,7 @@ public class caracteristicas extends javax.swing.JFrame {
         jButton6.setEnabled(true);
         jButton7.setEnabled(true);
         jTextField1.setText("");
+        ca = 1;
     }//GEN-LAST:event_jButton5MouseClicked
 
     private void jButton10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton10MouseClicked
@@ -724,11 +804,13 @@ public class caracteristicas extends javax.swing.JFrame {
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }
