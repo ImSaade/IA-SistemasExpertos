@@ -4,21 +4,23 @@
  */
 package com.SE;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData; // Importa la clase desde el paquete java.sql
+import javax.swing.JButton;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
-
-
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -29,15 +31,13 @@ public class peces extends javax.swing.JFrame {
     /**
      * Creates new form peces
      */
-    
     private int registroActual = 1;
-    
-    
+
     public peces() {
         initComponents();
         this.setExtendedState(MAXIMIZED_BOTH);
         this.setLocationRelativeTo(null);
-        
+
         establecerIconoEnBoton(jButton1, "src/com/images/inicio.png", 40, 40);
         establecerIconoEnBoton(jButton2, "src/com/images/anterior.png", 40, 40);
         establecerIconoEnBoton(jButton3, "src/com/images/siguiente.png", 40, 40);
@@ -50,15 +50,14 @@ public class peces extends javax.swing.JFrame {
         establecerIconoEnBoton(jButton10, "src/com/images/consultar.png", 40, 40);
         establecerIconoEnBoton(jButton11, "src/com/images/salir.png", 40, 40);
         establecerIconoEnBoton(jButton12, "src/com/images/imagen.png", 40, 40);
-        
-        
-        ImageIcon logoAcuario = new ImageIcon ("src/com/images/acuario.png");
-        ImageIcon acuario = new ImageIcon (logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
+
+        ImageIcon logoAcuario = new ImageIcon("src/com/images/acuario.png");
+        ImageIcon acuario = new ImageIcon(logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
         jLabel4.setIcon(acuario);
-        
+
         jTextField1.setEditable(false);
         jTextArea1.setEditable(false);
-        
+
         jButton12.setEnabled(false);
         jButton6.setEnabled(false);
         jButton7.setEnabled(false);
@@ -342,7 +341,7 @@ public class peces extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-       ConexionDB conexionDB = new ConexionDB();
+        ConexionDB conexionDB = new ConexionDB();
 
         try {
             // Obtener la conexión a la base de datos
@@ -375,7 +374,7 @@ public class peces extends javax.swing.JFrame {
                 // Crear un nuevo ImageIcon con la imagen escalada y mostrarlo en jLabel4
                 ImageIcon imagenEscalada = new ImageIcon(imagen);
                 jLabel4.setIcon(imagenEscalada);
-                registroActual = obtenerCantidadRegistros()/obtenerCantidadRegistros();
+                registroActual = obtenerCantidadRegistros() / obtenerCantidadRegistros();
             } else {
                 JOptionPane.showMessageDialog(this, "No se encontraron registros.");
             }
@@ -397,7 +396,7 @@ public class peces extends javax.swing.JFrame {
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         // TODO add your handling code here:
-         ConexionDB conexionDB = new ConexionDB();
+        ConexionDB conexionDB = new ConexionDB();
 
         try {
             // Verificar si estamos en el primer registro (registroActual igual a 1)
@@ -497,7 +496,7 @@ public class peces extends javax.swing.JFrame {
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
         // TODO add your handling code here:
-         ConexionDB conexionDB = new ConexionDB();
+        ConexionDB conexionDB = new ConexionDB();
         try {
             // Obtener la conexión a la base de datos
             Connection connection = conexionDB.obtenerConexion();
@@ -529,7 +528,7 @@ public class peces extends javax.swing.JFrame {
                 // Crear un nuevo ImageIcon con la imagen escalada y mostrarlo en jLabel4
                 ImageIcon imagenEscalada = new ImageIcon(imagen);
                 jLabel4.setIcon(imagenEscalada);
-                
+
                 registroActual = obtenerCantidadRegistros();
             } else {
                 JOptionPane.showMessageDialog(this, "No hay registros en la base de datos.");
@@ -549,6 +548,13 @@ public class peces extends javax.swing.JFrame {
         jButton6.setEnabled(true);
         jButton7.setEnabled(true);
         jButton12.setEnabled(true);
+
+        ImageIcon logoAcuario = new ImageIcon("src/com/images/acuario.png");
+        ImageIcon acuario = new ImageIcon(logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
+        jLabel4.setIcon(acuario);
+
+        jTextField1.setText("");
+        jTextArea1.setText("");
     }//GEN-LAST:event_jButton5MouseClicked
 
     private void jButton12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton12MouseClicked
@@ -568,7 +574,7 @@ public class peces extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton12MouseClicked
 
     private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
-        // TODO add your handling code here:                                
+        // TODO add your handling code here:                               
         ConexionDB conexionDB = new ConexionDB();
         try {
             // Obtener la conexión a la base de datos
@@ -626,12 +632,14 @@ public class peces extends javax.swing.JFrame {
 
                     if (filasAfectadas > 0) {
                         JOptionPane.showMessageDialog(this, "Registro actualizado con éxito.");
-                        ImageIcon logoAcuario = new ImageIcon ("src/com/images/acuario.png");
-                        ImageIcon acuario = new ImageIcon (logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
+                        ImageIcon logoAcuario = new ImageIcon("src/com/images/acuario.png");
+                        ImageIcon acuario = new ImageIcon(logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
                         jLabel4.setIcon(acuario);
 
                         jTextField1.setText("");
+                        jTextField1.setEditable(false);
                         jTextArea1.setText("");
+                        jTextArea1.setEditable(false);
                         jButton12.setEnabled(false);
                         jButton6.setEnabled(false);
                         jButton7.setEnabled(false);
@@ -654,12 +662,14 @@ public class peces extends javax.swing.JFrame {
 
                     if (filasAfectadas > 0) {
                         JOptionPane.showMessageDialog(this, "Registro insertado con éxito.");
-                        ImageIcon logoAcuario = new ImageIcon ("src/com/images/acuario.png");
-                        ImageIcon acuario = new ImageIcon (logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
+                        ImageIcon logoAcuario = new ImageIcon("src/com/images/acuario.png");
+                        ImageIcon acuario = new ImageIcon(logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
                         jLabel4.setIcon(acuario);
 
                         jTextField1.setText("");
+                        jTextField1.setEditable(false);
                         jTextArea1.setText("");
+                        jTextArea1.setEditable(false);
                         jButton12.setEnabled(false);
                         jButton6.setEnabled(false);
                         jButton7.setEnabled(false);
@@ -677,16 +687,14 @@ public class peces extends javax.swing.JFrame {
         } catch (Exception e) {
             System.out.println("Error al guardar o actualizar en la base de datos: " + e.getMessage());
         }
-        
-
     }//GEN-LAST:event_jButton6MouseClicked
 
     private void jButton7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseClicked
         // TODO add your handling code here:
-        ImageIcon logoAcuario = new ImageIcon ("src/com/images/acuario.png");
-        ImageIcon acuario = new ImageIcon (logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
+        ImageIcon logoAcuario = new ImageIcon("src/com/images/acuario.png");
+        ImageIcon acuario = new ImageIcon(logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
         jLabel4.setIcon(acuario);
-        
+
         jTextField1.setText("");
         jTextArea1.setText("");
         jButton12.setEnabled(false);
@@ -701,7 +709,7 @@ public class peces extends javax.swing.JFrame {
         jButton6.setEnabled(true);
         jButton7.setEnabled(true);
         jButton12.setEnabled(true);
-        
+
         ConexionDB conexionDB = new ConexionDB();
 
         try {
@@ -764,7 +772,7 @@ public class peces extends javax.swing.JFrame {
 
     private void jButton9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseClicked
         // TODO add your handling code here:
-        // Paso 1: Solicitar al usuario el nombre del pez a eliminar
+        // Solicitar al usuario el nombre del pez a eliminar
         String nombrePez = JOptionPane.showInputDialog(this, "Ingrese el nombre del pez que desea eliminar:");
 
         if (nombrePez != null && !nombrePez.isEmpty()) { // Verificar que se haya ingresado un nombre
@@ -786,11 +794,11 @@ public class peces extends javax.swing.JFrame {
                     int idPez = resultSet.getInt("id_objeto");
                     String descripcionPez = resultSet.getString("descripcion");
 
-                    // Paso 3: Mostrar los datos del pez, incluido el id_objeto, y preguntar si el usuario está seguro de eliminarlo
+                    // Mostrar los datos del pez, incluido el id_objeto, y preguntar si el usuario está seguro de eliminarlo
                     int respuesta = JOptionPane.showConfirmDialog(this, "ID: " + idPez + "\nNombre: " + nombrePez + "\nDescripción: " + descripcionPez + "\n¿Está seguro de eliminar este registro?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
 
                     if (respuesta == JOptionPane.YES_OPTION) { // Si el usuario confirma la eliminación
-                        // Paso 4: Ejecutar la consulta SQL para eliminar el registro
+                        //Ejecutar la consulta SQL para eliminar el registro
                         String eliminaRegistroSql = "DELETE FROM objeto WHERE nombre_objeto = ?";
                         PreparedStatement eliminaRegistroStatement = connection.prepareStatement(eliminaRegistroSql);
                         eliminaRegistroStatement.setString(1, nombrePez);
@@ -798,6 +806,17 @@ public class peces extends javax.swing.JFrame {
 
                         if (filasAfectadas > 0) {
                             JOptionPane.showMessageDialog(this, "Registro eliminado con éxito.");
+                            ImageIcon logoAcuario = new ImageIcon("src/com/images/acuario.png");
+                            ImageIcon acuario = new ImageIcon(logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
+                            jLabel4.setIcon(acuario);
+
+                            jTextField1.setText("");
+                            jTextField1.setEditable(false);
+                            jTextArea1.setText("");
+                            jTextArea1.setEditable(false);
+                            jButton12.setEnabled(false);
+                            jButton6.setEnabled(false);
+                            jButton7.setEnabled(false);
                         } else {
                             JOptionPane.showMessageDialog(this, "Error al eliminar el registro.");
                         }
@@ -817,7 +836,7 @@ public class peces extends javax.swing.JFrame {
 
     private void jButton10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton10MouseClicked
         // TODO add your handling code here:
-        String nombrePez = JOptionPane.showInputDialog(this, "Ingrese el nombre del pez que desea consultar:");
+        /*String nombrePez = JOptionPane.showInputDialog(this, "Ingrese el nombre del pez que desea consultar:");
         if (nombrePez != null && !nombrePez.isEmpty()) { // Verificar que se haya ingresado un nombre
 
             ConexionDB conexionDB = new ConexionDB();
@@ -833,7 +852,6 @@ public class peces extends javax.swing.JFrame {
                 ResultSet resultSet = consultaStatement.executeQuery();
 
                 if (resultSet.next()) {
-                    // Paso 3: Mostrar los datos del pez en los elementos de la interfaz de usuario
                     String descripcionPez = resultSet.getString("descripcion");
                     byte[] imagenBytes = resultSet.getBytes("imagen");
 
@@ -854,24 +872,71 @@ public class peces extends javax.swing.JFrame {
                         ImageIcon imagenEscaladaIcon = new ImageIcon(imagenEscalada);
                         jLabel4.setIcon(imagenEscaladaIcon);
                     } else {
-                        // Si no hay imagen en la base de datos, establece jLabel4 en nulo o muestra un mensaje de error
+                        // Si no hay imagen en la base de datos, jLabel4 = nulo 
                         jLabel4.setIcon(null);
                         JOptionPane.showMessageDialog(this, "El pez no tiene una imagen en la base de datos.");
                     }
                 } else {
                     // Mostrar un mensaje si el pez no existe en la base de datos
                     JOptionPane.showMessageDialog(this, "El pez con el nombre '" + nombrePez + "' no existe en la base de datos.");
-                    jTextField1.setText(""); // Borrar el nombre en jTextField1
-                    jTextArea1.setText(""); // Borrar la descripción en jTextArea1
-                    jLabel4.setIcon(null); // Borrar la imagen en jLabel4
+                    jTextField1.setText(""); 
+                    jTextArea1.setText("");
+                        ImageIcon logoAcuario = new ImageIcon ("src/com/images/acuario.png");
+                        ImageIcon acuario = new ImageIcon (logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
+                        jLabel4.setIcon(acuario);
+                    jLabel4.setIcon(null); 
                 }
-
-                // Cerrar la conexión a la base de datos
                 conexionDB.cerrarConexion();
 
             } catch (Exception e) {
                 System.out.println("Error al consultar en la base de datos: " + e.getMessage());
             }
+        }*/
+
+        // TODO add your handling code here:
+        try {
+            ConexionDB conexionDB = new ConexionDB();
+            Connection connection = conexionDB.obtenerConexion();
+
+            String consultaSql = "SELECT * FROM objeto"; // Consulta para seleccionar todos los campos de la tabla objeto
+            PreparedStatement consultaStatement = connection.prepareStatement(consultaSql);
+
+            ResultSet resultSet = consultaStatement.executeQuery();
+
+            // Crear una instancia de la nueva interfaz "tabla.java" y mostrarla
+            tabla tabla = new tabla(this);
+            tabla.setVisible(true);
+            this.dispose();
+
+            // Obtener el componente de tabla en la interfaz "tabla.java"
+            JTable jTable = tabla.getJTable();
+
+            // Crear un modelo de tabla y establecerlo en la tabla
+            DefaultTableModel tableModel = new DefaultTableModel();
+            jTable.setModel(tableModel);
+
+            // Agregar las filas de la consulta al modelo de la tabla
+            ResultSetMetaData metaData = (ResultSetMetaData) resultSet.getMetaData();
+            int numColumns = metaData.getColumnCount();
+
+            // Agregar nombres de columnas al modelo de tabla
+            for (int i = 1; i <= numColumns; i++) {
+                tableModel.addColumn(metaData.getColumnName(i));
+            }
+
+            // Agregar filas al modelo de tabla
+            while (resultSet.next()) {
+                Object[] rowData = new Object[numColumns];
+                for (int i = 1; i <= numColumns; i++) {
+                    rowData[i - 1] = resultSet.getObject(i);
+                }
+                tableModel.addRow(rowData);
+            }
+
+            conexionDB.cerrarConexion();
+
+        } catch (Exception e) {
+            System.out.println("Error al consultar en la base de datos: " + e.getMessage());
         }
     }//GEN-LAST:event_jButton10MouseClicked
 
@@ -909,15 +974,12 @@ public class peces extends javax.swing.JFrame {
             }
         });
     }
-    
+
     public int obtenerCantidadRegistros() {
         int totalRegistros = 0;
         ConexionDB conexionDB = new ConexionDB();
         try {
-            // Obtener la conexión a la base de datos
             Connection connection = conexionDB.obtenerConexion();
-
-            // Preparar una consulta SQL para contar la cantidad de registros
             String countQuery = "SELECT COUNT(*) AS total_registros FROM objeto";
             PreparedStatement countStatement = connection.prepareStatement(countQuery);
             ResultSet countResult = countStatement.executeQuery();
@@ -935,14 +997,14 @@ public class peces extends javax.swing.JFrame {
         return totalRegistros;
     }
 
-    
     public void establecerIconoEnBoton(JButton boton, String rutaIcono, int ancho, int alto) {
         ImageIcon icono = new ImageIcon(rutaIcono);
         Image imagen = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH); // Puedes cambiar SCALE_SMOOTH a otro método de escala si lo prefieres
         ImageIcon iconoEscalado = new ImageIcon(imagen);
         boton.setIcon(iconoEscalado);
     }
-    
+
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

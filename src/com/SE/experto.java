@@ -91,6 +91,9 @@ public class experto extends javax.swing.JFrame {
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/images/caracteristica.png"))); // NOI18N
         jButton1.setText("AGREGAR CARACTERISTICAS");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jButton1MouseEntered(evt);
             }
@@ -212,6 +215,13 @@ public class experto extends javax.swing.JFrame {
         jTextArea1.setText(mensajeSalirMenuExperto);
         jTextArea1.setEditable(false);
     }//GEN-LAST:event_jButton3MouseEntered
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        // TODO add your handling code here:
+        caracteristicas frame = new caracteristicas();
+        frame.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton1MouseClicked
 
     /**
      * @param args the command line arguments
