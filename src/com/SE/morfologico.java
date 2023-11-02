@@ -4,9 +4,22 @@
  */
 package com.SE;
 
-import java.awt.Image;
-import javax.swing.ImageIcon;
+import com.mysql.cj.jdbc.result.ResultSetMetaData;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import javax.swing.JButton;
+import javax.swing.ImageIcon;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import java.sql.Blob;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -17,24 +30,76 @@ public class morfologico extends javax.swing.JFrame {
     /**
      * Creates new form morfologico
      */
+    ArrayList<Object[]> carac;
+    ArrayList<Object[]> nombres;
+    boolean verdad;
+    int posicion = 0;
+    int pesoTotal = 0;
+    String[] nombreSeleccionado = new String[5];
+    int[] valor = new int[5];
+    int[] idCarac = new int[5];
+    int idCaract = 0;
+    String nombreCaract;
+    int idObj = 0;
+    String nombreObj;
+
     public morfologico() {
         initComponents();
         this.setExtendedState(MAXIMIZED_BOTH);
         this.setLocationRelativeTo(null);
-        
+
         ImageIcon logoAcuario = new ImageIcon("src/com/images/acuario.png");
-        ImageIcon acuario = new ImageIcon(logoAcuario.getImage().getScaledInstance(imagenPeces.getWidth(), imagenPeces.getHeight(), Image.SCALE_DEFAULT));
-        imagenPeces.setIcon(acuario);
-        
+        ImageIcon acuario = new ImageIcon(logoAcuario.getImage().getScaledInstance(imageObj.getWidth(), imageObj.getHeight(), Image.SCALE_DEFAULT));
+        imageObj.setIcon(acuario);
+
         ImageIcon anatomia = new ImageIcon("src/com/images/anatomia.jpg");
-        ImageIcon pezanatomia = new ImageIcon(anatomia.getImage().getScaledInstance(imagenCaracteristicas.getWidth(), imagenCaracteristicas.getHeight(), Image.SCALE_DEFAULT));
-        imagenCaracteristicas.setIcon(pezanatomia);
-        
-        establecerIconoEnBoton(botonAñadir,"src/com/images/nuevo.png",30,30);
-        establecerIconoEnBoton(botonEliminar,"src/com/images/borrar.png",30,30);
-        establecerIconoEnBoton(botonGuardar,"src/com/images/grabar.png",30,30);
-        establecerIconoEnBoton(botonCancelar,"src/com/images/cancelar.png",30,30);
-        establecerIconoEnBoton(botonSalir,"src/com/images/salir.png",30,30);
+        ImageIcon pezanatomia = new ImageIcon(anatomia.getImage().getScaledInstance(imageCar.getWidth(), imageCar.getHeight(), Image.SCALE_DEFAULT));
+        imageCar.setIcon(pezanatomia);
+
+        establecerIconoEnBoton(btnAñadir, "src/com/images/nuevo.png", 30, 30);
+        establecerIconoEnBoton(btnEliminar, "src/com/images/borrar.png", 30, 30);
+        establecerIconoEnBoton(btnGuardar, "src/com/images/grabar.png", 30, 30);
+        establecerIconoEnBoton(btnCancelar, "src/com/images/cancelar.png", 30, 30);
+        establecerIconoEnBoton(btnSalir, "src/com/images/salir.png", 30, 30);
+        establecerIconoEnBoton(btnConsultar, "src/com/images/consultar.png", 30, 30);
+
+        btnGuardar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+
+        carac = obtenerCaracteristicas();
+        jCCar.setModel(new DefaultComboBoxModel<>(carac.stream()
+                .map(item -> (String) item[0])
+                .toArray(String[]::new)));
+        jCCar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = jCCar.getSelectedIndex();
+                if (selectedIndex >= 0) {
+                    nombreCaract = (String) carac.get(selectedIndex)[0];
+                    idCaract = (int) carac.get(selectedIndex)[1]; // Solo si el ID es un entero
+                    String rutaImagen = (String) carac.get(selectedIndex)[2]; // Obtener la ruta de la imagen
+                    mostrarImagenEnLabel(rutaImagen); // Método para mostrar la imagen en el JLabel
+                }
+            }
+        });
+
+        nombres = obtenerNombresImagen();
+        jCOb.setModel(new DefaultComboBoxModel<>(nombres.stream()
+                .map(item -> (String) item[0])
+                .toArray(String[]::new)));
+        jCOb.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = jCOb.getSelectedIndex();
+                if (selectedIndex >= 0) {
+                    nombreObj = (String) nombres.get(selectedIndex)[0];
+                    idObj = (int) nombres.get(selectedIndex)[2]; // Solo si el ID es un entero
+                    ImageIcon imagenSeleccionado = (ImageIcon) nombres.get(selectedIndex)[1];
+                    Image imagen1 = imagenSeleccionado.getImage().getScaledInstance(imageObj.getWidth(), imageObj.getHeight(), Image.SCALE_SMOOTH);
+
+                    imagenSeleccionado = new ImageIcon(imagen1);
+                    imageObj.setIcon(imagenSeleccionado);
+                }
+            }
+        });
     }
 
     /**
@@ -52,24 +117,26 @@ public class morfologico extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        comboPeces = new javax.swing.JComboBox<>();
-        comboCaracteristicas = new javax.swing.JComboBox<>();
-        imagenPeces = new javax.swing.JLabel();
-        imagenCaracteristicas = new javax.swing.JLabel();
-        peso = new javax.swing.JTextField();
+        jCOb = new javax.swing.JComboBox<>();
+        jCCar = new javax.swing.JComboBox<>();
+        imageObj = new javax.swing.JLabel();
+        imageCar = new javax.swing.JLabel();
+        jPeso = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        areaCaracteristicas = new javax.swing.JTextArea();
+        areaCar = new javax.swing.JTextArea();
         jLabel9 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         areaPeso = new javax.swing.JTextArea();
-        botonAñadir = new javax.swing.JButton();
-        botonEliminar = new javax.swing.JButton();
-        botonGuardar = new javax.swing.JButton();
-        botonCancelar = new javax.swing.JButton();
-        botonSalir = new javax.swing.JButton();
+        btnAñadir = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
+        btnConsultar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -108,17 +175,17 @@ public class morfologico extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("CARACTERISTICAS");
 
-        comboPeces.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
-        comboPeces.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jCOb.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
+        jCOb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        comboCaracteristicas.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
-        comboCaracteristicas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jCCar.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
+        jCCar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        imagenPeces.setPreferredSize(new java.awt.Dimension(320, 320));
+        imageObj.setPreferredSize(new java.awt.Dimension(320, 320));
 
-        imagenCaracteristicas.setPreferredSize(new java.awt.Dimension(320, 320));
+        imageCar.setPreferredSize(new java.awt.Dimension(320, 320));
 
-        peso.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
+        jPeso.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
 
         jLabel6.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
         jLabel6.setText("Peso");
@@ -130,10 +197,10 @@ public class morfologico extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Caracteristicas seleccionadas:");
 
-        areaCaracteristicas.setColumns(20);
-        areaCaracteristicas.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        areaCaracteristicas.setRows(5);
-        jScrollPane1.setViewportView(areaCaracteristicas);
+        areaCar.setColumns(20);
+        areaCar.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        areaCar.setRows(5);
+        jScrollPane1.setViewportView(areaCar);
 
         jLabel9.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
@@ -144,43 +211,54 @@ public class morfologico extends javax.swing.JFrame {
         areaPeso.setRows(5);
         jScrollPane2.setViewportView(areaPeso);
 
-        botonAñadir.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
-        botonAñadir.setText("Añadir");
-        botonAñadir.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnAñadir.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
+        btnAñadir.setText("Añadir");
+        btnAñadir.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                botonAñadirMouseClicked(evt);
+                btnAñadirMouseClicked(evt);
             }
         });
 
-        botonEliminar.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
-        botonEliminar.setText("Eliminar");
-        botonEliminar.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnEliminar.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                botonEliminarMouseClicked(evt);
+                btnEliminarMouseClicked(evt);
             }
         });
 
-        botonGuardar.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
-        botonGuardar.setText("GUARDAR");
-        botonGuardar.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnGuardar.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
+        btnGuardar.setText("GUARDAR");
+        btnGuardar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                botonGuardarMouseClicked(evt);
+                btnGuardarMouseClicked(evt);
             }
         });
 
-        botonCancelar.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
-        botonCancelar.setText("CANCELAR");
-        botonCancelar.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnCancelar.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
+        btnCancelar.setText("CANCELAR");
+        btnCancelar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                botonCancelarMouseClicked(evt);
+                btnCancelarMouseClicked(evt);
             }
         });
 
-        botonSalir.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
-        botonSalir.setText("SALIR");
-        botonSalir.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnSalir.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
+        btnSalir.setText("SALIR");
+        btnSalir.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                botonSalirMouseClicked(evt);
+                btnSalirMouseClicked(evt);
+            }
+        });
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel10.setText("Peso Total: 0");
+
+        btnConsultar.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
+        btnConsultar.setText("Consultar");
+        btnConsultar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnConsultarMouseClicked(evt);
             }
         });
 
@@ -193,53 +271,55 @@ public class morfologico extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2)
-                .addGap(417, 417, 417))
+                .addGap(493, 493, 493))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(392, 392, 392)
+                .addComponent(imageObj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(163, 163, 163)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel7)
+                .addGap(179, 179, 179)
+                .addComponent(imageCar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel8)
+                        .addGap(175, 175, 175))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(313, 313, 313)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(comboPeces, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                                .addComponent(botonGuardar)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(botonCancelar)))
-                                        .addGap(153, 153, 153))
+                                    .addComponent(jCOb, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 778, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel8)
-                                .addGap(175, 175, 175)))
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(botonSalir, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(botonAñadir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(botonEliminar, javax.swing.GroupLayout.Alignment.LEADING)))
-                                    .addComponent(comboCaracteristicas, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(392, 392, 392)
-                        .addComponent(imagenPeces, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(163, 163, 163)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(peso, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel7)
-                        .addGap(179, 179, 179)
-                        .addComponent(imagenCaracteristicas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(418, 418, 418)
+                                .addComponent(btnGuardar)
+                                .addGap(92, 92, 92)
+                                .addComponent(btnCancelar)))
                         .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(5, 5, 5)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jCCar, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnAñadir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEliminar, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnConsultar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(406, 406, 406))
         );
         jPanel3Layout.setVerticalGroup(
@@ -251,15 +331,14 @@ public class morfologico extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(comboPeces, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboCaracteristicas, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jCOb, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCCar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(imagenPeces, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(imagenCaracteristicas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                            .addComponent(imageObj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(imageCar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(49, 49, 49)
@@ -272,21 +351,25 @@ public class morfologico extends javax.swing.JFrame {
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addComponent(botonAñadir)
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(btnAñadir)
+                                            .addComponent(btnConsultar))
                                         .addGap(18, 18, 18)
-                                        .addComponent(botonEliminar)))))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(botonGuardar)
-                            .addComponent(botonCancelar)
-                            .addComponent(botonSalir)))
+                                        .addComponent(btnEliminar))))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(141, 141, 141)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(peso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPeso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6)
                             .addComponent(jLabel7))))
-                .addContainerGap(174, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnGuardar)
+                    .addComponent(btnSalir)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnCancelar)
+                        .addComponent(jLabel10)))
+                .addContainerGap(192, Short.MAX_VALUE))
         );
 
         jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 1920, 910));
@@ -305,28 +388,206 @@ public class morfologico extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void botonAñadirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonAñadirMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_botonAñadirMouseClicked
+    private void btnAñadirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAñadirMouseClicked
+        pesoTotal = 0;
+        String infoTextArea = "", valorTextArea = "";
+        if (posicion == -1) {
+            posicion = 0;
+        }
+        try {
+            valor[posicion] = Integer.parseInt(jPeso.getText());
+            if (valor[posicion] > 0 && valor[posicion] < 101) {
+                if (idObj != 0) {
 
-    private void botonEliminarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonEliminarMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_botonEliminarMouseClicked
+                    if (posicion < 5) {
+                        if (nombreCaract != null) {
+                            nombreSeleccionado[posicion] = nombreCaract;
+                            idCarac[posicion] = idCaract;
 
-    private void botonGuardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonGuardarMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_botonGuardarMouseClicked
+                            for (int i = 0; i <= posicion; i++) {
+                                pesoTotal = pesoTotal + valor[i];
+                                infoTextArea = infoTextArea + nombreSeleccionado[i] + "\n";
+                                if (valor[i] != 0) {
+                                    valorTextArea = valorTextArea + valor[i] + "%\n";
+                                }
+                            }
 
-    private void botonCancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonCancelarMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_botonCancelarMouseClicked
+                            areaCar.setText(infoTextArea);
+                            areaPeso.setText(valorTextArea);
+                            jLabel10.setText("Peso total: " + pesoTotal);
+                            if (posicion > 3) {
+                                btnGuardar.setEnabled(true);
+                            }
+                            btnEliminar.setEnabled(true);
+                            posicion = posicion + 1;
 
-    private void botonSalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonSalirMouseClicked
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Selecciona una caracteristica en el comboBox");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Solo puedes agregar 5 caracteristicas");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Selecciona un Pez");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "El peso debe tener con valores del 1% al 100%");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Ingresa un valor numerico en 'peso'");
+        }
+    }//GEN-LAST:event_btnAñadirMouseClicked
+
+    private void btnEliminarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEliminarMouseClicked
+// TODO add your handling code here:
+        pesoTotal = 0;
+        String infoTextArea = "", valorTextArea = "";
+        if (posicion >= 0) {
+            posicion = posicion - 1;
+
+            nombreSeleccionado[posicion] = null;
+            idCarac[posicion] = 0;
+            valor[posicion] = 0;
+            if (posicion != -1) {
+                for (int i = 0; i <= posicion; i++) {
+                    if (nombreSeleccionado[i] == null && valor[i] == 0) {
+
+                    } else {
+                        pesoTotal = pesoTotal + valor[i];
+                        infoTextArea = infoTextArea + nombreSeleccionado[i] + "\n";
+                        valorTextArea = valorTextArea + valor[i] + "%\n";
+                    }
+                }
+                areaCar.setText(infoTextArea);
+                areaPeso.setText(valorTextArea);
+                jLabel10.setText("Peso total: " + pesoTotal);
+            } else {
+                areaCar.setText("");
+                areaPeso.setText("");
+                posicion = 0;
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay mas caracteristicas a eliminar");
+        }
+    }//GEN-LAST:event_btnEliminarMouseClicked
+
+    private void btnGuardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseClicked
+// TODO add your handling code here:
+        PreparedStatement pst = null;
+        boolean verdad = false;
+
+        for (int i = 0; i < posicion; i++) {
+            String instruccion = "insert into relacion (id_caracteristica,id_objeto,valor) values (?, ?,?)";
+
+            try {
+                ConexionDB conexionDB = new ConexionDB();
+                Connection connection = conexionDB.obtenerConexion();
+
+                pst = connection.prepareStatement(instruccion);
+                pst.setInt(1, idCarac[i]);
+                pst.setInt(2, idObj);
+                pst.setInt(3, valor[i]);
+                pst.executeUpdate();
+
+                verdad = true;
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Error al insertar: " + ex.toString());
+                verdad = false;
+            } finally {
+                try {
+                    if (pst != null) {
+                        pst.close();
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error al cerrar el PreparedStatement: " + e.getMessage());
+                }
+            }
+        }
+
+        if (verdad) {
+            JOptionPane.showMessageDialog(null, "Se agregó correctamente un registro");
+            btnGuardar.setEnabled(false);
+            btnEliminar.setEnabled(false);
+        }
+    }//GEN-LAST:event_btnGuardarMouseClicked
+
+    private void btnCancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseClicked
         // TODO add your handling code here:
-        experto exp = new experto ();
+        posicion = 0;
+        idCaract = 0;
+        nombreCaract = null;
+        idObj = 0;
+        nombreObj = null;
+        for (int i = 0; i < 5; i++) {
+            valor[i] = 0;
+            idCarac[i] = 0;
+            nombreSeleccionado[i] = null;
+        }
+        areaCar.setText("");
+        areaPeso.setText("");
+        jPeso.setText("");
+        ImageIcon icon = new ImageIcon("src/com/images/acuario.png");
+        Image imagen = icon.getImage().getScaledInstance(imageObj.getWidth(), imageObj.getHeight(), Image.SCALE_SMOOTH);
+        icon = new ImageIcon(imagen);
+        imageObj.setIcon(icon);
+        btnGuardar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        jLabel8.setText("Peso total: " + 0);
+    }//GEN-LAST:event_btnCancelarMouseClicked
+
+    private void btnSalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSalirMouseClicked
+        // TODO add your handling code here:
+        experto exp = new experto();
         exp.setVisible(true);
         this.setVisible(false);
-    }//GEN-LAST:event_botonSalirMouseClicked
+    }//GEN-LAST:event_btnSalirMouseClicked
+
+    private void btnConsultarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConsultarMouseClicked
+       try {
+            ConexionDB conexionDB = new ConexionDB();
+            Connection connection = conexionDB.obtenerConexion();
+
+            String consultaSql = "SELECT * FROM relacion"; // Consulta para seleccionar todos los campos de la tabla objeto
+            PreparedStatement consultaStatement = connection.prepareStatement(consultaSql);
+
+            ResultSet resultSet = consultaStatement.executeQuery();
+
+            // Crear una instancia de la nueva interfaz "tabla.java" y mostrarla
+            tabla_m tabla_m = new tabla_m(this);
+            tabla_m.setVisible(true);
+            this.dispose();
+
+            // Obtener el componente de tabla en la interfaz "tabla.java"
+            JTable jTable = tabla_m.getJTable();
+
+            // Crear un modelo de tabla y establecerlo en la tabla
+            DefaultTableModel tableModel = new DefaultTableModel();
+            jTable.setModel(tableModel);
+
+            // Agregar las filas de la consulta al modelo de la tabla
+            ResultSetMetaData metaData = (ResultSetMetaData) resultSet.getMetaData();
+            int numColumns = metaData.getColumnCount();
+
+            // Agregar nombres de columnas al modelo de tabla
+            for (int i = 1; i <= numColumns; i++) {
+                tableModel.addColumn(metaData.getColumnName(i));
+            }
+
+            // Agregar filas al modelo de tabla
+            while (resultSet.next()) {
+                Object[] rowData = new Object[numColumns];
+                for (int i = 1; i <= numColumns; i++) {
+                    rowData[i - 1] = resultSet.getObject(i);
+                }
+                tableModel.addRow(rowData);
+            }
+
+            conexionDB.cerrarConexion();
+
+        } catch (Exception e) {
+            System.out.println("Error al consultar en la base de datos: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnConsultarMouseClicked
 
     /**
      * @param args the command line arguments
@@ -362,7 +623,7 @@ public class morfologico extends javax.swing.JFrame {
             }
         });
     }
-    
+
     public void establecerIconoEnBoton(JButton boton, String rutaIcono, int ancho, int alto) {
         ImageIcon icono = new ImageIcon(rutaIcono);
         Image imagen = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH); // Puedes cambiar SCALE_SMOOTH a otro método de escala si lo prefieres
@@ -370,19 +631,85 @@ public class morfologico extends javax.swing.JFrame {
         boton.setIcon(iconoEscalado);
     }
 
+    public ArrayList<Object[]> obtenerNombresImagen() {
+        ArrayList<Object[]> celulares = new ArrayList<>();
+        ConexionDB conexionDB = new ConexionDB();
+        Connection connection = conexionDB.obtenerConexion();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id_objeto, nombre_objeto, imagen FROM objeto"); ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id_objeto");
+                String nombre = resultSet.getString("nombre_objeto");
+                Blob imagenBlob = resultSet.getBlob("imagen");
+                byte[] imagenBytes = imagenBlob.getBytes(1, (int) imagenBlob.length());
+                ImageIcon imagen = new ImageIcon(imagenBytes);
+                Object[] celData = {nombre, imagen, id};
+                celulares.add(celData);
+            }
+        } catch (Exception e) {
+            System.out.println("Error al obtener los nombres e imágenes del celular: " + e.getMessage());
+        }
+
+        return celulares;
+    }
+
+    public ArrayList<Object[]> obtenerCaracteristicas() {
+        ArrayList<Object[]> caracteristicas = new ArrayList<>();
+        ConexionDB conexionDB = new ConexionDB();
+        Connection connection = conexionDB.obtenerConexion();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id_caracteristica, caracteristica, ruta_imagen FROM caracteristicas"); ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id_caracteristica");
+                String nombre = resultSet.getString("caracteristica");
+                String ruta = resultSet.getString("ruta_imagen");
+                Object[] caracData = {nombre, id, ruta};
+                caracteristicas.add(caracData);
+            }
+        } catch (Exception e) {
+            System.out.println("Error al obtener las características: " + e.getMessage());
+        }
+
+        return caracteristicas;
+    }
+    
+    private void mostrarImagenEnLabel(String rutaImagen) {
+    if (rutaImagen != null && !rutaImagen.isEmpty()) {
+        ImageIcon icon = new ImageIcon(rutaImagen);
+
+        // Escalar la imagen para que se ajuste al tamaño de imageCar
+        int width = imageCar.getWidth();
+        int height = imageCar.getHeight();
+        Image image = icon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
+        ImageIcon imagenEscalada = new ImageIcon(image);
+
+        imageCar.setIcon(imagenEscalada);
+    } else {
+        ImageIcon anatomia = new ImageIcon("src/com/images/anatomia.jpg");
+        ImageIcon pezanatomia = new ImageIcon(anatomia.getImage().getScaledInstance(imageCar.getWidth(), imageCar.getHeight(), Image.SCALE_DEFAULT));
+        imageCar.setIcon(pezanatomia);
+    }
+}
+
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea areaCaracteristicas;
+    private javax.swing.JTextArea areaCar;
     private javax.swing.JTextArea areaPeso;
-    private javax.swing.JButton botonAñadir;
-    private javax.swing.JButton botonCancelar;
-    private javax.swing.JButton botonEliminar;
-    private javax.swing.JButton botonGuardar;
-    private javax.swing.JButton botonSalir;
-    private javax.swing.JComboBox<String> comboCaracteristicas;
-    private javax.swing.JComboBox<String> comboPeces;
-    private javax.swing.JLabel imagenCaracteristicas;
-    private javax.swing.JLabel imagenPeces;
+    private javax.swing.JButton btnAñadir;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnConsultar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnSalir;
+    private javax.swing.JLabel imageCar;
+    private javax.swing.JLabel imageObj;
+    private javax.swing.JComboBox<String> jCCar;
+    private javax.swing.JComboBox<String> jCOb;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
@@ -392,8 +719,8 @@ public class morfologico extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JTextField jPeso;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField peso;
     // End of variables declaration//GEN-END:variables
 }

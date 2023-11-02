@@ -7,18 +7,13 @@ package com.SE;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData; // Importa la clase desde el paquete java.sql
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JTable;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -49,6 +44,7 @@ public class caracteristicas extends javax.swing.JFrame {
         establecerIconoEnBoton(jButton9, "src/com/images/borrar.png", 40, 40);
         establecerIconoEnBoton(jButton10, "src/com/images/consultar.png", 40, 40);
         establecerIconoEnBoton(jButton11, "src/com/images/salir.png", 40, 40);
+        establecerIconoEnBoton(jButton12, "src/com/images/imagen.png", 40, 40);
 
         ImageIcon logoAcuario = new ImageIcon("src/com/images/anatomia.jpg");
         ImageIcon acuario = new ImageIcon(logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
@@ -60,6 +56,8 @@ public class caracteristicas extends javax.swing.JFrame {
         jLabel2.setVisible(false);
         jTextField2.setVisible(false);
         jTextField2.setEditable(false);
+        jTextField3.setEditable(false);
+        jButton12.setEnabled(false);
     }
 
     /**
@@ -91,6 +89,9 @@ public class caracteristicas extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jButton12 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -219,6 +220,19 @@ public class caracteristicas extends javax.swing.JFrame {
 
         jTextField2.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
 
+        jTextField3.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
+
+        jLabel5.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
+        jLabel5.setText("Ruta");
+
+        jButton12.setFont(new java.awt.Font("Roboto", 1, 36)); // NOI18N
+        jButton12.setText("IMAGEN");
+        jButton12.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton12MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -254,17 +268,24 @@ public class caracteristicas extends javax.swing.JFrame {
                                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(152, 152, 152))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(54, 54, 54)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField2)
-                            .addComponent(jTextField1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(54, 54, 54)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel5))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextField3)
+                                    .addComponent(jTextField2)
+                                    .addComponent(jTextField1)))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(109, 109, 109)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(275, 275, 275)))
+                        .addGap(172, 172, 172)))
                 .addGap(124, 124, 124))
         );
         jPanel3Layout.setVerticalGroup(
@@ -279,7 +300,13 @@ public class caracteristicas extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton12))
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -318,7 +345,7 @@ public class caracteristicas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        ConexionDB conexionDB = new ConexionDB();
+        /*ConexionDB conexionDB = new ConexionDB();
         Connection connection = conexionDB.obtenerConexion();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -350,6 +377,62 @@ public class caracteristicas extends javax.swing.JFrame {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+        }*/
+        ConexionDB conexionDB = new ConexionDB();
+        try {
+            // Obtener la conexión a la base de datos
+            Connection connection = conexionDB.obtenerConexion();
+
+            // Preparar una consulta SQL para seleccionar el último registro con la característica y ruta de imagen
+            String sql = "SELECT caracteristica, ruta_imagen FROM caracteristicas ORDER BY id_caracteristica LIMIT 1";
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            // Ejecutar la consulta
+            ResultSet result = statement.executeQuery();
+
+            // Verificar si hay un resultado
+            if (result.next()) {
+                // Obtener los datos del registro
+                String carac = result.getString("caracteristica");
+                String rutaImagen = result.getString("ruta_imagen");
+
+                // Mostrar la característica en jTextField1
+                jTextField1.setText(carac);
+
+                // Mostrar la ruta de la imagen en jTextField3
+                jTextField3.setText(rutaImagen);
+
+                // Cargar y mostrar la imagen en jLabel4
+                if (rutaImagen != null && !rutaImagen.isEmpty()) {
+                    ImageIcon icon = new ImageIcon(rutaImagen);
+
+                    // Escalar la imagen para que se ajuste al tamaño de jLabel4
+                    int width = jLabel4.getWidth();
+                    int height = jLabel4.getHeight();
+                    Image image = icon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
+                    ImageIcon imagenEscalada = new ImageIcon(image);
+
+                    jLabel4.setIcon(imagenEscalada);
+                    idActual= 1;
+                    
+                } else {
+                    jLabel4.setIcon(null); // Si no hay imagen, se establece a null
+                    // Muestra la imagen predeterminada
+                    jTextField3.setText("No hay imagen en la bd, Por lo tanto Imagen Default");
+                    jTextField3.setEditable(false);
+                    ImageIcon logoAcuario = new ImageIcon("src/com/images/anatomia.jpg");
+                    ImageIcon acuario = new ImageIcon(logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
+                    jLabel4.setIcon(acuario);
+                }
+            } 
+            else {
+                JOptionPane.showMessageDialog(this, "No hay registros en la base de datos.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            // Cerrar la conexión
+            conexionDB.cerrarConexion();
         }
     }//GEN-LAST:event_jButton1MouseClicked
 
@@ -363,8 +446,8 @@ public class caracteristicas extends javax.swing.JFrame {
             ResultSet resultSet = null;
 
             try {
-                // Modificar la consulta SQL para seleccionar la característica con el ID actual
-                String consulta = "SELECT caracteristica FROM caracteristicas WHERE id_caracteristica = ?";
+                // Modificar la consulta SQL para seleccionar la característica y la ruta de la imagen con el ID actual
+                String consulta = "SELECT caracteristica, ruta_imagen FROM caracteristicas WHERE id_caracteristica = ?";
                 preparedStatement = connection.prepareStatement(consulta);
                 preparedStatement.setInt(1, idActual);
                 resultSet = preparedStatement.executeQuery();
@@ -373,6 +456,30 @@ public class caracteristicas extends javax.swing.JFrame {
                 if (resultSet.next()) {
                     String caracteristica = resultSet.getString("caracteristica");
                     jTextField1.setText(caracteristica);
+
+                    // Obtener la ruta de la imagen
+                    String rutaImagen = resultSet.getString("ruta_imagen");
+                    jTextField3.setText(rutaImagen);
+
+                    // Mostrar la imagen en jLabel4 si la ruta no está vacía
+                    if (rutaImagen != null && !rutaImagen.isEmpty()) {
+                        ImageIcon icon = new ImageIcon(rutaImagen);
+
+                        // Escalar la imagen para que se ajuste al tamaño de jLabel4
+                        int width = jLabel4.getWidth();
+                        int height = jLabel4.getHeight();
+                        Image image = icon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
+                        ImageIcon imagenEscalada = new ImageIcon(image);
+
+                        jLabel4.setIcon(imagenEscalada);
+                    } else {
+                        jLabel4.setIcon(null); // Si no hay imagen, se establece a null
+                        // Muestra la imagen predeterminada
+                        jTextField3.setText("No hay imagen en la bd, Por lo tanto Imagen Default");
+                        ImageIcon logoAcuario = new ImageIcon("src/com/images/anatomia.jpg");
+                        ImageIcon acuario = new ImageIcon(logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
+                        jLabel4.setIcon(acuario);
+                    }
                 }
             } catch (Exception ex) {
                 // Manejar cualquier excepción de base de datos
@@ -405,8 +512,8 @@ public class caracteristicas extends javax.swing.JFrame {
         ResultSet resultSet = null;
 
         try {
-            // Modificar la consulta SQL para seleccionar la característica con el ID actual
-            String consulta = "SELECT caracteristica FROM caracteristicas WHERE id_caracteristica = ?";
+            // Modificar la consulta SQL para seleccionar la característica y la ruta de la imagen con el ID actual
+            String consulta = "SELECT caracteristica, ruta_imagen FROM caracteristicas WHERE id_caracteristica = ?";
             preparedStatement = connection.prepareStatement(consulta);
             preparedStatement.setInt(1, idActual);
             resultSet = preparedStatement.executeQuery();
@@ -415,6 +522,30 @@ public class caracteristicas extends javax.swing.JFrame {
             if (resultSet.next()) {
                 String caracteristica = resultSet.getString("caracteristica");
                 jTextField1.setText(caracteristica);
+
+                // Obtener la ruta de la imagen
+                String rutaImagen = resultSet.getString("ruta_imagen");
+                jTextField3.setText(rutaImagen);
+
+                // Mostrar la imagen en jLabel4 si la ruta no está vacía
+                if (rutaImagen != null && !rutaImagen.isEmpty()) {
+                    ImageIcon icon = new ImageIcon(rutaImagen);
+
+                    // Escalar la imagen para que se ajuste al tamaño de jLabel4
+                    int width = jLabel4.getWidth();
+                    int height = jLabel4.getHeight();
+                    Image image = icon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
+                    ImageIcon imagenEscalada = new ImageIcon(image);
+
+                    jLabel4.setIcon(imagenEscalada);
+                } else {
+                    jLabel4.setIcon(null); // Si no hay imagen, se establece a null
+                    // Muestra la imagen predeterminada
+                    jTextField3.setText("No hay imagen en la bd, Por lo tanto Imagen Default");
+                    ImageIcon logoAcuario = new ImageIcon("src/com/images/anatomia.jpg");
+                    ImageIcon acuario = new ImageIcon(logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
+                    jLabel4.setIcon(acuario);
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "No hay más registros siguientes", "Aviso", JOptionPane.WARNING_MESSAGE);
                 idActual--; // Vuelve al ID anterior ya que no hay más registros siguientes
@@ -439,14 +570,13 @@ public class caracteristicas extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3MouseClicked
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
-        // TODO add your handling code here:
         ConexionDB conexionDB = new ConexionDB();
         try {
             // Obtener la conexión a la base de datos
             Connection connection = conexionDB.obtenerConexion();
 
-            // Preparar una consulta SQL para seleccionar el último registro
-            String sql = "SELECT caracteristica FROM caracteristicas ORDER BY id_caracteristica DESC LIMIT 1";
+            // Preparar una consulta SQL para seleccionar el último registro con la característica y ruta de imagen
+            String sql = "SELECT caracteristica, ruta_imagen FROM caracteristicas ORDER BY id_caracteristica DESC LIMIT 1";
             PreparedStatement statement = connection.prepareStatement(sql);
 
             // Ejecutar la consulta
@@ -456,14 +586,39 @@ public class caracteristicas extends javax.swing.JFrame {
             if (result.next()) {
                 // Obtener los datos del registro
                 String carac = result.getString("caracteristica");
+                String rutaImagen = result.getString("ruta_imagen");
 
-                // Mostrar los datos en los componentes de la interfaz
+                // Mostrar la característica en jTextField1
                 jTextField1.setText(carac);
 
-                idActual = obtenerCantidadRegistros() + 40;
+                // Mostrar la ruta de la imagen en jTextField3
+                jTextField3.setText(rutaImagen);
+
+                // Cargar y mostrar la imagen en jLabel4
+                if (rutaImagen != null && !rutaImagen.isEmpty()) {
+                    ImageIcon icon = new ImageIcon(rutaImagen);
+
+                    // Escalar la imagen para que se ajuste al tamaño de jLabel4
+                    int width = jLabel4.getWidth();
+                    int height = jLabel4.getHeight();
+                    Image image = icon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
+                    ImageIcon imagenEscalada = new ImageIcon(image);
+
+                    jLabel4.setIcon(imagenEscalada);
+                } else {
+                    jLabel4.setIcon(null); // Si no hay imagen, se establece a null
+                    jTextField3.setText("No hay imagen en la bd, Por lo tanto Imagen Default");
+                    // Muestra la imagen predeterminada
+                    ImageIcon logoAcuario = new ImageIcon("src/com/images/anatomia.jpg");
+                    ImageIcon acuario = new ImageIcon(logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
+                    jLabel4.setIcon(acuario);
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "No hay registros en la base de datos.");
             }
+
+            // Agregar la línea idActual = obtenerCantidadRegistros() + 40;
+            idActual = obtenerCantidadRegistros() + 40;
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         } finally {
@@ -542,11 +697,14 @@ public class caracteristicas extends javax.swing.JFrame {
         jTextField2.setVisible(true);
         jTextField2.setEditable(true);
         jLabel2.setVisible(true);
+        jButton12.setEnabled(true);
         ca = 2;
     }//GEN-LAST:event_jButton8MouseClicked
 
     private void jButton7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseClicked
         jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
         jTextField1.setEditable(false);
         jButton6.setEnabled(false);
         jButton7.setEnabled(false);
@@ -599,6 +757,7 @@ public class caracteristicas extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }*/
+
         ConexionDB conexionDB = new ConexionDB();
         Connection connection = conexionDB.obtenerConexion();
         PreparedStatement insertPreparedStatement = null;
@@ -607,12 +766,13 @@ public class caracteristicas extends javax.swing.JFrame {
         try {
             String nuevaCaracteristica = jTextField1.getText();
             String caracteristicaActualiza = jTextField2.getText();
+            String imagen = jTextField3.getText();
 
             if (nuevaCaracteristica.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Ingrese una característica antes de insertarla.", "Aviso", JOptionPane.WARNING_MESSAGE);
             } else {
-                String insertSQL = "INSERT INTO caracteristicas (caracteristica) VALUES (?)";
-                String updateSQL = "UPDATE caracteristicas SET caracteristica = ? WHERE caracteristica = ?";
+                String insertSQL = "INSERT INTO caracteristicas (caracteristica, ruta_imagen) VALUES (?, ?)";
+                String updateSQL = "UPDATE caracteristicas SET caracteristica = ?, ruta_imagen = ? WHERE caracteristica = ?";
 
                 insertPreparedStatement = connection.prepareStatement(insertSQL);
                 updatePreparedStatement = connection.prepareStatement(updateSQL);
@@ -620,12 +780,14 @@ public class caracteristicas extends javax.swing.JFrame {
                 if (ca == 1) {
                     // Operación de inserción
                     insertPreparedStatement.setString(1, nuevaCaracteristica);
+                    insertPreparedStatement.setString(2, imagen); // Agregar la ruta de la imagen
                     insertPreparedStatement.executeUpdate();
                     JOptionPane.showMessageDialog(this, "Característica insertada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 } else if (ca == 2) {
                     // Operación de modificación
                     updatePreparedStatement.setString(1, (ca == 2) ? caracteristicaActualiza : nuevaCaracteristica);
-                    updatePreparedStatement.setString(2, jTextField1.getText()); // Condición para identificar el registro a actualizar basado en jTextField1
+                    updatePreparedStatement.setString(2, imagen); // Agregar la ruta de la imagen
+                    updatePreparedStatement.setString(3, jTextField1.getText()); // Condición para identificar el registro a actualizar basado en jTextField1
                     updatePreparedStatement.executeUpdate();
                     JOptionPane.showMessageDialog(this, "Característica modificada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 } else {
@@ -638,6 +800,12 @@ public class caracteristicas extends javax.swing.JFrame {
                 jTextField1.setText("");
                 jLabel2.setVisible(false);
                 jTextField2.setVisible(false);
+                jTextField3.setText(""); // Limpiar el campo de texto de la ruta de la imagen
+                ImageIcon logoAcuario = new ImageIcon("src/com/images/anatomia.jpg");
+                ImageIcon acuario = new ImageIcon(logoAcuario.getImage().getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_DEFAULT));
+                jLabel4.setIcon(acuario);
+                jButton12.setEnabled(false);
+
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -662,6 +830,7 @@ public class caracteristicas extends javax.swing.JFrame {
         jButton6.setEnabled(true);
         jButton7.setEnabled(true);
         jTextField1.setText("");
+        jButton12.setEnabled(true);
         ca = 1;
     }//GEN-LAST:event_jButton5MouseClicked
 
@@ -716,6 +885,23 @@ public class caracteristicas extends javax.swing.JFrame {
         exp.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton11MouseClicked
+
+    private void jButton12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton12MouseClicked
+        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Seleccione un archivo");
+
+        // Filtra solo los archivos de tipo imagen (opcional, puedes quitar esta parte si no necesitas filtro)
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de imagen", "jpg", "jpeg", "png", "gif");
+        fileChooser.setFileFilter(filter);
+
+        int userSelection = fileChooser.showOpenDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+            jTextField3.setText(filePath); // Establece la ruta del archivo en el JTextField
+            jTextField3.setEditable(false);
+        }
+    }//GEN-LAST:event_jButton12MouseClicked
 
     /**
      * @param args the command line arguments
@@ -795,6 +981,7 @@ public class caracteristicas extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -807,10 +994,12 @@ public class caracteristicas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 }
